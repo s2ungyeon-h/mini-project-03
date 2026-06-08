@@ -8,10 +8,6 @@
 * **수행 기간**: 2026.05.11 ~ 2026.05.13 
 * **팀 구성**: 👥 팀 프로젝트 / 9인
 * **사용 데이터**: 화장품 리뷰 샘플 데이터 200건
-* **담당 업무**:
-    * Supervisor Agent 고도화 — reason_code 기반 재시도 정책 설계 및 repair_directive 생성 (`supervisor_node`)
-    * Analyzer Agent 고도화 — 1단계 기본 속성 → 2단계 확장 속성 매핑 프롬프트 개선 (`analyzer_node`)
-    * Critic Agent 고도화 — reason_code 4종 분류 체계 및 검증 로직 구현 (`critic_node`)
 * **사용 기술**:
     * `GPT-4.1-mini` — 대량 배치 처리·반복 루프 구조에서 비용 효율성을 확보하면서도 JSON 구조화 출력 안정성을 유지하기 위해 선택 
     * `LangGraph` — Analyzer → Critic → Supervisor의 조건부 순환 흐름을 노드 그래프로 명확하게 구조화하고, reason_code 기반 재시도·종료 분기를 State로 제어하기 위해 선택
@@ -62,18 +58,6 @@ reason_code 기반 재시도 정책으로 파이프라인 전체 흐름을 제�
 - Analyzer / Critic 실행 여부 확인 후 다음 Agent 라우팅
 - `RETRYABLE` 코드(`OUTPUT_ERROR` / `SCOPE_ERROR` / `EVIDENCE_ERROR`) 여부 판단
 - 최대 재시도 횟수(`max_retries=3`) 초과 시 강제 종료
-### 🗄️ 배치 처리 및 DB 저장
-미처리 리뷰를 일괄 처리하고 결과를 SQLite DB에 자동 저장하여 대량 리뷰 분석을 자동화
-- `get_unprocessed_reviews()`로 `agent_aspect=[]`인 미처리 리뷰 자동 조회
-- 리뷰별 Agent 실행 및 오류 발생 시 다음 리뷰로 자동 계속
-- `update_result()`로 aspect / label 결과를 SQLite DB에 저장
-### 📊 분석 결과 대시보드 (Streamlit)
-배치 분석 결과를 속성별로 시각화하고 건별로 조회할 수 있는 웹 대시보드 제공
-- 리뷰 직접 입력 후 버튼 클릭 → DB 저장 및 Agent 분석 실행
-- 리뷰 분석 결과 건별 조회 (원문 + 속성 + 긍/부정 출력)
-- 속성별 집계 결과를 표와 그래프로 확인
-- 속성 필터 추가/제거 기능
-
 ---
 ## 💡 배운 점 및 개선할 점
  
